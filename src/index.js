@@ -27,4 +27,9 @@ app.use(
 // routes
 app.use("/auth", authRoute);
 
+// production (client)
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(`${__dirname}/public`));
+}
+
 app.listen(PORT, () => console.log(`app started on port: ${PORT}`));
