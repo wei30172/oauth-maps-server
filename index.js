@@ -9,12 +9,16 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(
-  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+  cookieSession({
+    name: "session",
+    keys: ["oauthmaps"],
+    maxAge: 24 * 60 * 60 * 100, // 1 day
+  })
 );
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:8080", // client
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
