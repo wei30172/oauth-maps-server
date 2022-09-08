@@ -8,7 +8,7 @@ const getGoogleOAuthTokens = async ({ code }) => {
     code,
     client_id: process.env.GOOGLE_CLIENT_ID,
     client_secret: process.env.GOOGLE_CLIENT_SECRET,
-    redirect_uri: process.env.GOOGLE_OAUTH_REDIRECTURL,
+    redirect_uri: `${process.env.SERVER_URL}${process.env.GOOGLE_OAUTH_ROUTE}`,
     grant_type: "authorization_code",
   };
 
@@ -46,20 +46,18 @@ const getGoogleUser = async ({ id_token, access_token }) => {
 };
 
 const getFaceBookOAuthTokens = async ({ code }) => {
-  const url = "https://graph.facebook.com/v4.0/oauth/access_token";
-
-  const values = {
+  const params = {
     code,
     client_id: process.env.FACEBOOK_CLIENT_ID,
     client_secret: process.env.FACEBOOK_CLIENT_SECRET,
-    redirect_uri: process.env.FACEBOOK_OAUTH_REDIRECTURL,
+    redirect_uri: `${process.env.SERVER_URL}${process.env.FACEBOOK_OAUTH_ROUTE}`,
   };
 
   try {
-    const { data } = await axios.get(url, qs.stringify(values), {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
+    const { data } = await axios({
+      url: "https://graph.facebook.com/v14.0/oauth/access_token",
+      method: "get",
+      params,
     });
     return data; // { access_token, token_type, expires_in }
   } catch (error) {
@@ -71,12 +69,13 @@ const getFaceBookOAuthTokens = async ({ code }) => {
   }
 };
 
-const getFaceBookUser = async ({ access_token }) => {
+const getFacebookUser = async ({ access_token }) => {
   try {
-    const { data } = await axios.get({
+    const { data } = await axios({
       url: "https://graph.facebook.com/me",
+      method: "get",
       params: {
-        fields: ["name", "email", "picture"].join(","),
+        fields: ["id"].join(","),
         access_token,
       },
     });
@@ -91,5 +90,5 @@ module.exports = {
   getGoogleOAuthTokens,
   getGoogleUser,
   getFaceBookOAuthTokens,
-  getFaceBookUser,
+  getFacebookUser,
 };

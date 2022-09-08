@@ -1,7 +1,8 @@
 const cookieSession = require("cookie-session");
 const express = require("express");
 const cors = require("cors");
-const authRoute = require("./routes/auth");
+const authRoute = require("./src/routes/auth");
+const history = require("connect-history-api-fallback");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
@@ -18,7 +19,7 @@ app.use(
 
 app.use(
   cors({
-    origin: "http://localhost:8080", // client
+    origin: process.env.CLIENT_URL, // client
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
@@ -29,6 +30,7 @@ app.use("/auth", authRoute);
 
 // production (client)
 if (process.env.NODE_ENV === "production") {
+  app.use(history());
   app.use(express.static(`${__dirname}/public`));
 }
 
