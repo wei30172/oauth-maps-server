@@ -26,7 +26,7 @@ app.use(
 );
 
 // routes
-app.use("api/auth", authRoute);
+app.use("/api/auth", authRoute);
 
 // production (client)
 if (process.env.NODE_ENV === "production") {
