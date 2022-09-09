@@ -25,7 +25,8 @@ const googleOauthHandler = async (req, res) => {
     res.redirect(`${process.env.CLIENT_URL}/profile`);
   } catch {
     console.error("Google login failure.", error);
-    return res.status(401).send("Google login failure.", error);
+    const errorMsg = "Google login failure.";
+    res.redirect(`${process.env.CLIENT_URL}/login?errorMsg=${errorMsg}`);
   }
 };
 
@@ -34,7 +35,7 @@ const facebookOauthHandler = async (req, res) => {
   const code = req.query.code;
 
   try {
-    // get the id and access token with the code
+    // get access token with the code
     const { access_token } = await getFaceBookOAuthTokens({ code });
 
     // get user with tokens
@@ -43,8 +44,9 @@ const facebookOauthHandler = async (req, res) => {
     req.session.fbinfo = facebookUserID;
     res.redirect(`${process.env.CLIENT_URL}/profile`);
   } catch (error) {
-    console.error("Facebook login failure.", error);
-    return res.status(401).send("Facebook login failure.", error);
+    console.error("Facebook bind failure.", error);
+    const errorMsg = "Facebook bind failure.";
+    res.redirect(`${process.env.CLIENT_URL}/profile?errorMsg=${errorMsg}`);
   }
 };
 
@@ -78,7 +80,7 @@ const userUnbind = async (req, res) => {
     req.session.fbinfo = null;
     return res.send("fbinfo session destroyed success.");
   } catch (error) {
-    return res.send("fbinfo sSession destroyed failure.");
+    return res.send("fbinfo session destroyed failure.");
   }
 };
 
