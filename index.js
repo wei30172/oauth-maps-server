@@ -13,13 +13,13 @@ app.use(
   cookieSession({
     name: "session",
     keys: ["oauthmaps"],
-    maxAge: 24 * 60 * 60 * 100, // 1 day
+    maxAge: 24 * 60 * 60 * 100,
   })
 );
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // client
+    origin: process.env.CLIENT_URL,
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
